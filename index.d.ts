@@ -8,6 +8,7 @@ declare interface LokiTransportOptions extends TransportStream.TransportStreamOp
     json?: boolean;
     batching?: boolean;
     labels?: object;
+    excludeDefaultLabels?: boolean;
     clearOnError?: boolean,
     replaceOnError?: boolean,
     replaceTimestamp?: boolean,
