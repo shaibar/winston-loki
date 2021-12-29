@@ -38,6 +38,7 @@ class LokiTransport extends Transport {
     this.labels = options.labels
     this.useWinstonMetaAsLabels = options.useWinstonMetaAsLabels
     this.ignoredMeta = options.ignoredMeta || []
+    this.excludeDefaultLabels = options.excludeDefaultLabels
   }
 
   /**
@@ -60,7 +61,8 @@ class LokiTransport extends Transport {
     const level = info[Symbol.for('level')]
 
     // build custom labels if provided
-    let lokiLabels = { level: level }
+    let lokiLabels = this.excludeDefaultLabels ?  {} : { level: level }
+    lokiLabels = Object.assign(lokiLabels, labels)
 
     if (this.useWinstonMetaAsLabels) {
       // deleting the keys (labels) that we want to ignore from Winston's meta
