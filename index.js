@@ -34,6 +34,7 @@ class LokiTransport extends Transport {
 
     this.useCustomFormat = options.format !== undefined
     this.labels = options.labels
+    this.excludeDefaultLabels = options.excludeDefaultLabels
   }
 
   /**
@@ -55,7 +56,7 @@ class LokiTransport extends Transport {
     const { label, labels, timestamp, level, message, ...rest } = info
 
     // build custom labels if provided
-    let lokiLabels = { level: level }
+    let lokiLabels = this.excludeDefaultLabels ?  {} : { level: level }
     lokiLabels = Object.assign(lokiLabels, labels)
 
     if (this.labels) {
