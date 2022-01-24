@@ -33,7 +33,7 @@ module.exports = {
       if (typeof logEntry.labels === 'string') {
         return logEntry
       }
-      let protoLabels = `{level="${logEntry.labels.level}"`
+      let protoLabels = logEntry.labels.level ? `{level="${logEntry.labels.level}"` : '{';
       delete logEntry.labels.level
       for (let key in logEntry.labels) {
         protoLabels += `,${key}="${logEntry.labels[key]}"`
