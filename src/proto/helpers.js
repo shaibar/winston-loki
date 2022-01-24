@@ -28,14 +28,17 @@ module.exports = {
         return logEntry
       }
 
-      let protoLabels = logEntry.labels.level ? `{level="${logEntry.labels.level}"` : '{';
-      delete logEntry.labels.level
+      if (!logEntry.labels.level) {
+        logEntry.labels = JSON.stringify(logEntry.labels)
+      } else {
+        let protoLabels = logEntry.labels.level ? `{level="${logEntry.labels.level}"` : '{';
+        delete logEntry.labels.level
         for (const key in logEntry.labels) {
-        protoLabels += `${protoLabels.length > 1 ? ',' : ''}${key}="${logEntry.labels[key]}"`
+          protoLabels += `${protoLabels.length > 1 ? ',' : ''}${key}="${logEntry.labels[key]}"`
+        }
+        protoLabels += '}'
+        logEntry.labels = protoLabels
       }
-      protoLabels += '}'
-      logEntry.labels = protoLabels
-
       return logEntry
     })
     return batch
