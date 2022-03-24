@@ -20,6 +20,7 @@ class LokiTransport extends Transport {
     // Pass all the given options to batcher
     this.batcher = new Batcher({
       host: options.host,
+      pathname: options.pathname,
       basicAuth: options.basicAuth,
       headers: options.headers || {},
       interval: options.interval,
