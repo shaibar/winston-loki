@@ -27,7 +27,7 @@ class Batcher {
     this.options = options
 
     // Construct Grafana Loki push API url
-    this.url = new url.URL(this.options.host + '/loki/api/v1/push')
+    this.url = new url.URL(this.options.host + (this.options.pathname || '/loki/api/v1/push'))
 
     // Parse basic auth parameters if given
     if (options.basicAuth) {
