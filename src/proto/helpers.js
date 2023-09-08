@@ -28,8 +28,10 @@ module.exports = {
         return logEntry
       }
 
-      let protoLabels = logEntry.labels.level ? `{level="${logEntry.labels.level}"` : '{';
-      delete logEntry.labels.level
+      let protoLabels = logEntry.labels && logEntry.labels.level ? `{level="${logEntry.labels.level}"` : '{'
+      if (logEntry.labels && logEntry.labels.level) {
+        delete logEntry.labels.level
+      }
         for (const key in logEntry.labels) {
         protoLabels += `${protoLabels.length > 1 ? ',' : ''}${key}="${logEntry.labels[key]}"`
       }

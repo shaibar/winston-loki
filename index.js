@@ -62,7 +62,7 @@ class LokiTransport extends Transport {
     const level = info[Symbol.for('level')]
 
     // build custom labels if provided
-    let lokiLabels = this.excludeDefaultLabels ?  {} : { level: level }
+    let lokiLabels = this.excludeDefaultLabels ? {} : { level: level }
     lokiLabels = Object.assign(lokiLabels, labels)
 
     if (this.useWinstonMetaAsLabels) {
@@ -83,8 +83,8 @@ class LokiTransport extends Transport {
     const line = this.useCustomFormat
       ? info[MESSAGE]
       : `${message} ${
-      rest && Object.keys(rest).length > 0 ? JSON.stringify(rest) : ''
-    }`
+        rest && Object.keys(rest).length > 0 ? JSON.stringify(rest) : ''
+      }`
 
     // Make sure all label values are strings
     lokiLabels = Object.fromEntries(Object.entries(lokiLabels).map(([key, value]) => [key, value ? value.toString() : value]))
@@ -130,7 +130,7 @@ class LokiTransport extends Transport {
    * calls preceding the flush() call.
    */
   async flush () {
-    return await this.batcher.waitFlushed();
+    return await this.batcher.waitFlushed()
   }
 
   /**
