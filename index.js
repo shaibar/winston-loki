@@ -28,13 +28,17 @@ class LokiTransport extends Transport {
       batching: options.batching !== false,
       clearOnError: options.clearOnError,
       onConnectionError: options.onConnectionError,
-      replaceTimestamp: options.replaceTimestamp,
+      replaceTimestamp: options.replaceTimestamp !== false,
       gracefulShutdown: options.gracefulShutdown !== false,
-      timeout: options.timeout
+      timeout: options.timeout,
+      httpAgent: options.httpAgent,
+      httpsAgent: options.httpsAgent
     })
 
     this.useCustomFormat = options.format !== undefined
     this.labels = options.labels
+    this.useWinstonMetaAsLabels = options.useWinstonMetaAsLabels
+    this.ignoredMeta = options.ignoredMeta || []
     this.excludeDefaultLabels = options.excludeDefaultLabels
   }
 
@@ -54,13 +58,20 @@ class LokiTransport extends Transport {
     })
 
     // Deconstruct the log
-    const { label, labels, timestamp, level, message, ...rest } = info
+    const { label, labels, timestamp, message, ...rest } = info
+    const level = info[Symbol.for('level')]
 
     // build custom labels if provided
     let lokiLabels = this.excludeDefaultLabels ? {} : { level: level }
     lokiLabels = Object.assign(lokiLabels, labels)
 
-    if (this.labels) {
+    if (this.useWinstonMetaAsLabels) {
+      // deleting the keys (labels) that we want to ignore from Winston's meta
+      for (const [key, _] of Object.entries(rest)) {
+        if (this.ignoredMeta.includes(key)) delete rest[key]
+      }
+      lokiLabels = Object.assign(lokiLabels, rest)
+    } else if (this.labels) {
       lokiLabels = Object.assign(lokiLabels, this.labels)
     } else {
       lokiLabels.job = label
